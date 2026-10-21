@@ -1,0 +1,20 @@
+[project]
+name = "mlba-engine"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.1",
+    "numpy>=2.4.6",
+    "pydantic>=2.14.1",
+]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.170.5",
+    "maturin>=1.15.0",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,12 @@
+[package]
+name = "mlba-sim"
+description = "Balatro simulator core for the MLBA engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "mlba_sim"
+
+[dependencies]

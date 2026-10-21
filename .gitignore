@@ -1,0 +1,23 @@
+# Build outputs
+target/
+.venv/
+__pycache__/
+*.pyc
+*.so
+.pytest_cache/
+.hypothesis/
+
+# BalatroBot logs and game saves
+logs/
+*.jkr
+
+# Never commit game code or assets (the reference Lua lives in ~/balatro-ref/)
+balatro-ref/
+*.love
+
+# Raw API dumps and large traces; curated fixtures live in tests/fixtures/
+raw/
+*.trace.jsonl
+*.trace.jsonl.gz
+
+.DS_Store
