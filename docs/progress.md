@@ -30,23 +30,24 @@
   `state_before` and `state_after`); `.gz` supported.
 - `harness/policy.py`: deterministic scripted policy for recording only.
 - `harness/recorder.py`, `harness/replay.py`, CLI `python -m harness record|replay`.
-- 57 Python tests pass; 1 Rust test passes.
+- 59 Python tests pass; 1 Rust test passes.
+- **Exit criterion met.** `tests/fixtures/traces/MLBA0001-RED-WHITE.jsonl.gz`
+  is a full seeded run (Red Deck, White Stake, 16 actions: start, select,
+  discard, play, cash_out, buy, next_round, ending in GAME_OVER at Ante 1
+  round 2). `python -m harness replay` on it through the real game: 16 steps,
+  31 states compared, 0 mismatches. A copy with one changed action fails at
+  that step with the differing fields listed. CI checks the committed trace's
+  integrity offline (`tests/harness/test_recorded_traces.py`).
 
-### Blocked
+### Required game setup
 
-- **Recording a real run.** BalatroBot 1.5.2's `start` fails with
-  `start.lua:116: attempt to index field 'viewed_back' (a nil value)`.
-  Cause: Steamodded 26.1002.0 replaces the New Run tab with its own run-select
-  UI (`G.UIDEF.run_select_galdur`), which never sets `G.GAME.viewed_back`;
-  BalatroBot's `start` assumes it is set. Earlier starts worked only because a
-  deck-unlock popup had set it. Reproduced on a fresh instance. Fix options
-  (need approval, both touch the local Balatro setup):
-  1. Set `["vanilla_run_select"] = true` in
-     `~/Library/Application Support/Balatro/config/Steamodded.jkr` (also a
-     toggle in Steamodded's settings menu). Vanilla run setup then sets
-     `viewed_back`. UI-only change.
-  2. Install our instrumentation mod early and have it set `viewed_back`
-     before BalatroBot's `start` runs.
+- Steamodded's **vanilla run select** must be on (`["vanilla_run_select"] = true`
+  in `config/Steamodded.jkr`, or the toggle in Steamodded's settings).
+  Without it, BalatroBot 1.5.2's `start` fails with
+  `start.lua:116: attempt to index field 'viewed_back' (a nil value)`:
+  Steamodded 26.1002.0's own run-select UI (`G.UIDEF.run_select_galdur`)
+  never sets `G.GAME.viewed_back`, which BalatroBot's `start` assumes.
+- The harness also retries `start` if it hits this error right after `menu`.
 
 ## Observations about the API
 
